@@ -1,0 +1,320 @@
+---
+title: "Project 1 - Mickey"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format:
+  html:
+    embed-resources: true
+    code-overflow: wrap
+editor: visual
+---
+
+## Our Team
+
+Fill the vector `our_team` with the full names (First Last) of each team member. Although this task is worth no points, failing to complete this task will result in a one-point deduction.
+
+```{r}
+our_team = c('First Last')
+our_team
+```
+
+------------------------------------------------------------------------
+
+## Introduction
+
+The Walt Disney Company is an American multinational mass media and entertainment conglomerate. Its brand, often represented by their cartoon character Mickey Mouse, is recognized in every corner of the world.
+
+In this project, we will focus on data gathered from three components of this business empire:
+
+A.  Walt Disney Movies
+B.  Disney+ Streaming
+C.  Company Financials
+
+At the conclusion of each section, a written summary (5-10 sentences) of your work is required. The summaries should include:
+
+-   insights from your exploratory data analysis
+-   patterns recognized through your presented charts
+-   pros and cons of the methods used to complete the section
+
+All charts must be labeled and styled beyond the default settings to display a clear and helpful narrative.
+
+The project will be graded on a basis of 100 maximum points.
+
+------------------------------------------------------------------------
+
+## The Necessary Packages
+
+Run this entire code chunk BEFORE proceeding to ensure that all subsequent code are recognized and executable.
+
+```{r packages}
+#| message: false
+library(tidyverse)
+library(highcharter)
+library(gt)
+```
+
+------------------------------------------------------------------------
+
+## A. Disney Movies \[*40 pts total*\]
+
+The Walt Disney Studios is a major force in the entertainment industry. It is one of the "Big Five" studios (Universal, Paramount, Warner Bros, and Sony Pictures being the others). In this section, you will explore data related to this important arm of the Disney empire.
+
+#### A0. Data
+
+The `dis_movies` dataset contains a collection of movies produced by Walt Disney Studios and affiliates since 1937 ([Source](https://www.the-numbers.com/box-office-records/worldwide/all-movies/theatrical-distributors/walt-disney)). Run the following code chunk to import this dataset into your environment.
+
+```{r a0}
+#| message: false
+
+dis_movies = read_csv(file = 'https://www.dropbox.com/scl/fi/q5tot6ylmqvzyv1ve73jk/dis_movies.csv?rlkey=i6nrb7htoimm025kxxitegue9&st=ha0pbdxj&raw=1')
+```
+
+Data Dictionary
+
+-   yor: year of release of movie
+-   movie: title of the movie
+-   box_dom: the lifetime domestic (US) box office revenue (\$US) for the movie
+-   box_int: the lifetime international (non-US) box office revenue (\$US) for the movie
+
+All box office figures are unadjusted for inflation.
+
+#### A1. EDA \[*24 pts total*\]
+
+##### A1a. Top 50 Movies \[*8 pts*\]
+
+-   Create and display (using `gt`) a data frame (`dis_25`) that will hold all the columns from `dis_movies` for the top 25 movies based on worldwide box office revenue.
+
+```{r a1a}
+
+
+
+```
+
+##### A1b. Boost from Afar \[*8 pts*\]
+
+-   Identify, by filtering `dis_movies`, the 100 movies that have the greatest portion of their worldwide box office revenue from international sales. Display only the top 10 (based on the international percentage) of these movies using `gt`.
+
+```{r a1b}
+
+
+
+```
+
+##### A1c. Adjusted Box Office \[*8 pts*\]
+
+-   Create a new column in `dis_movies` called `box_dom_adj` which will hold the domestic box office revenue for each movie adjusted for inflation.
+
+-   Assume an annual inflation rate of 0.03.
+
+-   The formula to approximate adjusted box office is:
+
+$$
+box\_dom\_adj=box\_dom\cdot (1+i)^{\frac{2024-yor}{1.5}}
+$$
+
+```{r a1c}
+
+
+
+```
+
+#### A2. Charts \[*16 pts total*\]
+
+##### A2a. Box Office Distribution \[*8 pts*\]
+
+-   Generate a scatterplot (in `ggplot2`) of the inflation-adjusted domestic box office revenue of all movies released in the 2000s (2000-2009).
+    -   x = yor
+
+    -   y = box_dom_adj
+
+```{r a2a}
+
+
+
+```
+
+##### A2b. Five-Year Trend \[*8 pts*\]
+
+-   Choose an appropriate chart (in `highcharter`) to show the trends in box office revenue for any five-year span of your choosing.
+
+```{r a2b}
+
+
+
+```
+
+#### A3. Summary \[*3 pts*\]
+
+Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
+
+> Summary
+
+------------------------------------------------------------------------
+
+## B. Disney+ \[*30 pts total*\]
+
+Since its launch in November 2019, Disney+ streaming service has seen consistent growth in its subscriber base. With access to every Disney movie and TV show, this has been a favorite among Disney fans. In this section, you will explore data related to this growing service catering to users of all ages.
+
+#### B0. Data
+
+The `dis_plus` dataset contains a quarterly report of Disney+ subscribers as well as the corresponding counts for the king of Video On Demand service - Netflix ([Source](https://www.statista.com/statistics/1095372/disney-plus-number-of-subscribers-us/)). Run the following code chunk to import this dataset into your environment.
+
+```{r b0}
+#| message: false
+
+dis_plus = read_csv(file = 'https://www.dropbox.com/scl/fi/5kt0kzhnpop3ub9qavnzm/dis_plus.csv?rlkey=b3eqvyhthfpgxxd7sdzzru00y&st=aw0bree0&raw=1')
+```
+
+Data Dictionary
+
+-   year: year of subscriber measurement
+-   qtr: quarter of subscriber measurement
+-   dis_subs: the number of total subscribers (in millions) to Disney+ as of the end of the given qtr & year
+-   nflx_subs: the number of total subscribers (in millions) to Netflix as of the end of the given qtr & year
+
+#### B1. Disney+ \[*15 pts total*\]
+
+##### B1a. Qtr-over-Qtr Growth \[*9 pts*\]
+
+-   For Disney+ subscribers, evaluate the quarter-over-quarter growth rate for each pair of consecutive quarters.
+-   Express the growth rates as decimals rounded to 3 dp.
+-   In a comment, state which quarter & year experienced the greatest rate of growth.
+
+```{r bia}
+
+
+
+```
+
+##### B1b. Annual Totals \[*6 pts*\]
+
+-   For each year of data, provide annualized summaries for Disney+ subscribers:
+    -   average quarterly subscribers
+
+    -   highest quarterly subscribers
+
+    -   lowest quarterly subscribers
+
+    -   range of quarterly subscribers
+
+```{r b1b}
+
+
+
+```
+
+#### B2. Comparisons \[*15 pts total*\]
+
+##### B2a. Stacking Up Against Netflix \[*15 pts*\]
+
+-   Generate a combination plot with the subscriber counts for both Disney+ and Netflix as a function of qtr & year.
+-   Use either `ggplot2` or `highcharter`.
+-   Present both series as lines, being sure to style all parts of the chart to present a compelling storyline.
+
+```{r b2a}
+
+
+
+```
+
+#### B3. Summary \[*3 pts*\]
+
+Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
+
+> Summary
+
+------------------------------------------------------------------------
+
+## C. Company Financials \[*30 pts total*\]
+
+The Walt Disney Company is a publicly-traded company (NYSE: DIS) that has been a fixture in the Dow Jones Industrial Average since 1991. In this section, you will explore data related to daily share prices of this company's common stock.
+
+#### C0. Data
+
+The `dis_stock` dataset contains daily trading data for DIS stock for the 2500 trading days prior to 2/8/2025 ([Source](https://finance.yahoo.com/quote/DIS/history/)). Run the following code chunk to import this dataset into your environment.
+
+```{r}
+#| message: false
+
+dis_stock = read_csv(file = 'https://www.dropbox.com/scl/fi/x25yj3rp81dn1tipguqk5/dis_stock.csv?rlkey=6j7gkdei81aipn0kem0i34tit&st=rps4871p&raw=1')
+```
+
+Data Dictionary
+
+-   date: date of trading day
+-   open: the share price at the opening bell
+-   high: the intra-day highest share price
+-   low: the intra-day lowest share price
+-   close: the share price at the closing bell
+-   volume: the number of shares traded during the trading day
+-   spx: the S&P 500 Index value at the close
+-   shrsout: the number of shares (in billions) outstanding of DIS common stock
+
+#### C1. Stock Performance \[*14 pts total*\]
+
+##### C1a. Daily Activity\[*8 pts*\]
+
+-   For all the trading days in `dis_stock`, filter the days such that you retain only the days on which there was at least a 5% gain or loss
+
+```{r c1a}
+
+
+```
+
+##### C1b. Market Cap \[*7 pts*\]
+
+-   On which date, was the market capitalization of DIS at its peak?
+-   On which month, was the greatest movement (+ or -) of market cap compared to the prior month?
+-   The formula for market cap is:
+
+$$
+market cap=share price \cdot shares outstanding
+$$
+
+-   Use `close` as the share price for each trading day.
+
+```{r c1b}
+
+
+```
+
+#### C2. Financial Analysis \[*13 pts total*\]
+
+##### C2a. DIS vs SPX \[*6 pts*\]
+
+-   With 1/2/2021 as the start date, generate a combo chart that will show the growth of \$1 invested in DIS and separately in the S&P 500 Index.
+-   Use 12/31/2024 as the end date.
+-   Use `ggplot2` for this chart.
+
+```{r c2a}
+
+
+
+```
+
+##### C2b. OHLC \[*7 pts*\]
+
+-   Using `highcharter`, generate a chart showing the intra-day prices (open, high, low, close) for each trading day in 2024.
+
+```{r c2b}
+
+
+
+```
+
+### C3. Summary \[*3 pts*\]
+
+Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
+
+> Summary
+
+------------------------------------------------------------------------
+
+## Z. Wrap Up
+
+When you are ready to submit your project, follow these steps:
+
+1.  Click the `Render` button to compile this document. An HTML file will be created in the folder containing this QMD file.
+
+2.  While the HTML file is opened in a browser (e.g. Chrome, Safari), print it to a PDF file. Do not choose the 'Export as PDF' option on Safari. This will create one giant page in the PDF, making it impossible to grade. Your final PDF must be separated into individual letter-sized pages before submitting.
+
+3.  Submit the PDF file to **Gradescope** (not to Canvas). Only one person per team needs to submit. Any confusion with multiple entries per team will result in point deductions in the final grade.
