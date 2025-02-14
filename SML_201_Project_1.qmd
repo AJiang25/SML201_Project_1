@@ -13,7 +13,7 @@ editor: visual
 Fill the vector `our_team` with the full names (First Last) of each team member. Although this task is worth no points, failing to complete this task will result in a one-point deduction.
 
 ```{r}
-our_team = c('First Last')
+our_team = c('Arnold Jiang', 'John Woo', 'Tong Dai', 'Willow Yang')
 our_team
 ```
 
@@ -85,8 +85,21 @@ All box office figures are unadjusted for inflation.
 
 ```{r a1a}
 
+dis_25 <- dis_movies %>%
+    slice_max(n = 25, box_int) %>%
+    gt() %>% 
+    tab_header(
+        title = "Top 25 movies based on worldwide box office revenue"
+    ) %>%
+    cols_label(
+        yor = html("Year of Release"),
+        movie = html("Movie Name"),
+        box_dom = html("Domestic Revenue"),
+        box_int = html("International Revenue")
+    ) %>%
+    opt_stylize(style = 6, color = "cyan")
 
-
+dis_25
 ```
 
 ##### A1b. Boost from Afar \[*8 pts*\]
@@ -94,9 +107,26 @@ All box office figures are unadjusted for inflation.
 -   Identify, by filtering `dis_movies`, the 100 movies that have the greatest portion of their worldwide box office revenue from international sales. Display only the top 10 (based on the international percentage) of these movies using `gt`.
 
 ```{r a1b}
+dis_10 <- dis_movies %>%
+    mutate(
+        total_worldwide = box_dom + box_int,
+        percentage = box_int / total_worldwide * 100
+    ) %>%
+    slice_max(percentage, n = 10) %>%
+    select(yor, movie, box_dom, box_int) %>%
+    gt() %>% 
+    tab_header(
+        title = "Top 10 Movies with the Greatest Portion of Their Worldwide Box Office Revenue From International Sales"
+    ) %>%
+    cols_label(
+        yor = html("Year of Release"),
+        movie = html("Movie Name"),
+        box_dom = html("Domestic Revenue"),
+        box_int = html("International Revenue")
+    ) %>%
+    opt_stylize(style = 6, color = "red")
 
-
-
+dis_10
 ```
 
 ##### A1c. Adjusted Box Office \[*8 pts*\]
@@ -113,7 +143,23 @@ $$
 
 ```{r a1c}
 
+dis_adj <- dis_movies %>%
+    mutate(
+        box_dom_adj = box_dom * (1 + 0.03)^{(2024-yor)/(1.5)}
+    ) %>%
+    gt() %>% 
+    tab_header(
+        title = "dis_movies with domestic box office revenue adjusted for inflation"
+    ) %>%
+    cols_label(
+        yor = html("Year of Release"),
+        movie = html("Movie Name"),
+        box_dom = html("Domestic Revenue"),
+        box_int = html("International Revenue")
+    ) %>%
+    opt_stylize(style = 6, color = "blue")
 
+dis_adj
 
 ```
 
