@@ -86,7 +86,10 @@ All box office figures are unadjusted for inflation.
 ```{r a1a}
 
 dis_25 <- dis_movies %>%
-    slice_max(n = 25, box_int) %>%
+    mutate(
+        total_worldwide = box_dom + box_int,
+    ) %>%
+    slice_max(n = 25, total_worldwide) %>%
     gt() %>% 
     tab_header(
         title = "Top 25 movies based on worldwide box office revenue"
@@ -95,7 +98,8 @@ dis_25 <- dis_movies %>%
         yor = html("Year of Release"),
         movie = html("Movie Name"),
         box_dom = html("Domestic Revenue"),
-        box_int = html("International Revenue")
+        box_int = html("International Revenue"),
+        total_worldwide = html("Worldwide Revenue")
     ) %>%
     opt_stylize(style = 6, color = "cyan")
 
@@ -107,12 +111,17 @@ dis_25
 -   Identify, by filtering `dis_movies`, the 100 movies that have the greatest portion of their worldwide box office revenue from international sales. Display only the top 10 (based on the international percentage) of these movies using `gt`.
 
 ```{r a1b}
-dis_10 <- dis_movies %>%
+
+dis_100 <- dis_movies %>%
     mutate(
         total_worldwide = box_dom + box_int,
         percentage = box_int / total_worldwide * 100
     ) %>%
-    slice_max(percentage, n = 10) %>%
+  arrange(desc(percentage)) %>%
+  filter(row_number() <= 100)
+
+dis_10 <- dis_100 %>%
+    top_n(10, percentage) %>%
     select(yor, movie, box_dom, box_int) %>%
     gt() %>% 
     tab_header(
@@ -143,23 +152,24 @@ $$
 
 ```{r a1c}
 
-dis_adj <- dis_movies %>%
+dis_movies <- dis_movies %>%
     mutate(
         box_dom_adj = box_dom * (1 + 0.03)^{(2024-yor)/(1.5)}
-    ) %>%
+    ) 
+
+dis_movies %>%
     gt() %>% 
     tab_header(
-        title = "dis_movies with domestic box office revenue adjusted for inflation"
+        title = "Disney Movies with Domestic Box Office Revenue Adjusted for Inflation"
     ) %>%
     cols_label(
         yor = html("Year of Release"),
         movie = html("Movie Name"),
         box_dom = html("Domestic Revenue"),
-        box_int = html("International Revenue")
+        box_int = html("International Revenue"),
+        box_dom_adj = html("Domestic Revenue (Adjusted)")
     ) %>%
     opt_stylize(style = 6, color = "blue")
-
-dis_adj
 
 ```
 
@@ -175,7 +185,24 @@ test pushing
     -   y = box_dom_adj
 
 ```{r a2a}
+two_thousands_movies <- dis_movies |>
+  filter(yor >= 2000 & yor <= 2009) 
 
+min_box = min(two_thousands_movies$box_dom_adj)
+max_box = max(two_thousands_movies$box_dom_adj)
+
+two_thousands_movies |> 
+  ggplot(aes(x = yor, y = box_dom_adj)) +
+  geom_point() +
+  labs(title = "Inflation-Adjusted Domestic Revenue of Movies Released in 2000-2009",
+       x = 'Year of Release', 
+       y = 'Domestic Box Office (Adjusted)') + 
+  lims(y = c(min_box, max_box)) + 
+  theme(
+    plot.title = element_text(color = 'purple'),
+    axis.title.x = element_text(color = 'purple'),
+    axis.title.y = element_text(color = 'purple'),
+  )
 
 
 ```
@@ -186,6 +213,19 @@ test pushing
 
 ```{r a2b}
 
+filtered_movies_2 <- dis_movies |>
+  filter(yor >= 2019 & yor <= 2023)
+
+box_int_by_year <- filtered_movies_2 |>
+  group_by(yor) |>
+  summarise(year_box_int = sum(box_int))
+
+box_int_by_year |> 
+  hchart(hcaes(x = yor, y = year_box_int), type = "column") |>
+  hc_title(text = "Trends in International Revenue of Disney Movies from 2019-2023") |>
+  hc_xAxis(title = list(text = "Year Of Release")) |>
+  hc_yAxis(title = list(text = "International Revenue")) 
+  
 
 
 ```
@@ -194,7 +234,7 @@ test pushing
 
 Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
 
-> Summary
+> We observed that none of the top 10 movies with the greatest portion of their worldwide revenue from international sales are included in the top 25 movies with highest worldwide box office revenue. This suggests that the films with the highest overall (worldwide) revenue tend to do so primarily from domestic sales, rather than relying heavily on international success. In addition, we noticed that among Disney movies released between 2019 and 2023, 2019 recorded the highest international box office revenues, while 2020 had the lowest. However, from 2020 to 2023, there is an upward trend in the international box office revenues. This upward trend from 2020 to 2023 in the international box office revenues among Disney movies reflects the gradual recovery from the COVID-19 pandemic.
 
 ------------------------------------------------------------------------
 
