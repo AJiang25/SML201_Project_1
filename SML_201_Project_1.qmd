@@ -165,6 +165,8 @@ dis_adj
 
 #### A2. Charts \[*16 pts total*\]
 
+test pushing
+
 ##### A2a. Box Office Distribution \[*8 pts*\]
 
 -   Generate a scatterplot (in `ggplot2`) of the inflation-adjusted domestic box office revenue of all movies released in the 2000s (2000-2009).
