@@ -344,7 +344,27 @@ Data Dictionary
 -   For all the trading days in `dis_stock`, filter the days such that you retain only the days on which there was at least a 5% gain or loss
 
 ```{r c1a}
+filtered_dis_stocks <- dis_stock |>
+  mutate(percentage = ((close - open) / open) * 100 ) |>
+  filter(percentage >= 5 | percentage <= -5)
 
+filtered_dis_stocks |>
+  gt() |>
+  tab_header(
+        title = "Trading Days of DIS Stocks with at least 5% Gain or Loss"
+    ) %>%
+    cols_label(
+        date = html("Date"),
+        open = html("Open"),
+        high = html("High"),
+        low = html("Low"),
+        close = html("Close"),
+        volume = html("Volume"),
+        spx = html("SPX"),
+        shrsout = html("Outstanding Shares"),
+        percentage = html("Per Change")
+    ) %>%
+    opt_stylize(style = 6, color = "pink")
 
 ```
 
@@ -361,6 +381,15 @@ $$
 -   Use `close` as the share price for each trading day.
 
 ```{r c1b}
+
+peak_market_cap_date = dis_stock |>
+  mutate(market_cap = close * shrsout) |>
+  filter(market_cap == max(market_cap)) |>
+  pull(date)
+
+paste("The market capitalization of DIS was at its peak on", peak_market_cap_date)
+
+# need to finish the second part
 
 
 ```
