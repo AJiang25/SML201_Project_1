@@ -314,9 +314,29 @@ dis_plus |>
     -   range of quarterly subscribers
 
 ```{r b1b}
+# range is not referring to the interval here right?? it's referring to the difference right??
 
+annualized_sum <- dis_plus |>
+  group_by(year) |>
+  summarise(avg_qtr_subs = sum(dis_subs) / 4,
+            highest_qtr_subs = max(dis_subs),
+            lowest_qtr_subs = min(dis_subs),
+            range_qtr_subs = highest_qtr_subs - lowest_qtr_subs,
+            )
 
-
+annualized_sum |>
+  gt() |>
+  tab_header(
+      title = "Annualized Summaries for Disney+ Subscribers (in Millions)"
+  ) |> 
+  cols_label(
+      year = html("Year"),
+      avg_qtr_subs = html("Average Quarterly Subscribers"),
+      highest_qtr_subs = html("Highest Quarterly Subscribers"),
+      lowest_qtr_subs = html("Lowest Quarterly Subscribers"),
+      range_qtr_subs = html("Range of Quarterly Subscribers"), 
+  ) |>
+  opt_stylize(style = 6, color = "blue")
 ```
 
 #### B2. Comparisons \[*15 pts total*\]
@@ -329,11 +349,10 @@ dis_plus |>
 
 ```{r b2a}
 
-# make a new col for year-qtr and then use that as x, 
-
 dis_plus <- dis_plus |> 
-  mutate(year_qtr = paste0("Y", year, "-Q", qtr)) 
+  mutate(year_qtr = paste0("", year, "-Q", qtr)) 
 
+# lmk if this needs to be styled more bc idk 
 hchart(
   object = dis_plus,
   mapping = hcaes(x = year_qtr, y = dis_subs),
