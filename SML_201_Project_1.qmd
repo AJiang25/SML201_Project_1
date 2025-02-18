@@ -269,6 +269,35 @@ Data Dictionary
 
 ```{r bia}
 
+dis_plus <- dis_plus |>
+  mutate(qtr_over_qtr_growth = round((dis_subs - lag(dis_subs)) / dis_subs * 100, 3)) |>
+  mutate(qtr_over_qtr_growth = ifelse(is.na(qtr_over_qtr_growth), 0, qtr_over_qtr_growth))
+
+greatest_growth_year <- dis_plus |>
+  filter(qtr_over_qtr_growth == max(qtr_over_qtr_growth, na.rm = T)) |>
+  pull(year)
+
+greatest_growth_qtr <- dis_plus |>
+  filter(qtr_over_qtr_growth == max(qtr_over_qtr_growth, na.rm = T)) |>
+  pull(qtr)
+
+# the greatest rate of growth happened during year 2020 qtr 3.
+paste("The greatest rate of growth happened during year", greatest_growth, "qtr", greatest_growth_qtr) 
+
+dis_plus |> 
+  gt() |>
+  tab_header(
+      title = "Quarter-Over-Quarter Growth Rate for Each Pair of Consecutive Quarter"
+  ) |> 
+  cols_label(
+      year = html("Year"),
+      qtr = html("Quarter"),
+      dis_subs = html("Disney Subscribers (in Millions)"),
+      nflx_subs = html("Netflix Subscribers (in Millions)"),
+      qtr_over_qtr_growth = html("Quarter-Over-Quarter Growth Rate")
+  ) |>
+  opt_stylize(style = 6, color = "green")
+
 
 
 ```
@@ -300,7 +329,31 @@ Data Dictionary
 
 ```{r b2a}
 
+# make a new col for year-qtr and then use that as x, 
 
+dis_plus <- dis_plus |> 
+  mutate(year_qtr = paste0("Y", year, "-Q", qtr)) 
+
+hchart(
+  object = dis_plus,
+  mapping = hcaes(x = year_qtr, y = dis_subs),
+  type = 'line',
+  color = 'orange',
+  yAxis = 0
+) |> 
+  hc_add_series( 
+    data = dis_plus,
+    mapping = hcaes(x = year_qtr, y = nflx_subs),
+    type = 'line',
+    color = 'red',
+    yAxis = 1
+  ) |> 
+  hc_yAxis_multiples(
+    list(title = list(text = 'Disney+ Subscribers (in Millions)', style = list(color = "orange"))),
+    list(opposite = TRUE, title = list(text = 'Netflix Subscribers (in Millions)', style = list(color = "red")))
+  ) |>
+  hc_title(text = "Subscriber Counts for Disney+ and Netflix", align = "center") |>
+  hc_xAxis(title = list(text = "Year and Quarter")) 
 
 ```
 
@@ -351,20 +404,20 @@ filtered_dis_stocks <- dis_stock |>
 filtered_dis_stocks |>
   gt() |>
   tab_header(
-        title = "Trading Days of DIS Stocks with at least 5% Gain or Loss"
-    ) %>%
-    cols_label(
-        date = html("Date"),
-        open = html("Open"),
-        high = html("High"),
-        low = html("Low"),
-        close = html("Close"),
-        volume = html("Volume"),
-        spx = html("SPX"),
-        shrsout = html("Outstanding Shares"),
-        percentage = html("Per Change")
-    ) %>%
-    opt_stylize(style = 6, color = "pink")
+      title = "Trading Days of DIS Stocks with at least 5% Gain or Loss"
+  ) |>
+  cols_label(
+      date = html("Date"),
+      open = html("Open"),
+      high = html("High"),
+      low = html("Low"),
+      close = html("Close"),
+      volume = html("Volume"),
+      spx = html("SPX"),
+      shrsout = html("Outstanding Shares"),
+      percentage = html("Per Change")
+  ) |> 
+  opt_stylize(style = 6, color = "pink")
 
 ```
 
