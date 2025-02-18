@@ -198,6 +198,7 @@ two_thousands_movies |>
        x = 'Year of Release', 
        y = 'Domestic Box Office (Adjusted)') + 
   lims(y = c(min_box, max_box)) + 
+  scale_x_continuous(breaks = seq(2000, 2009, 1)) +
   theme(
     plot.title = element_text(color = 'purple'),
     axis.title.x = element_text(color = 'purple'),
@@ -282,7 +283,7 @@ greatest_growth_qtr <- dis_plus |>
   pull(qtr)
 
 # the greatest rate of growth happened during year 2020 qtr 3.
-paste("The greatest rate of growth happened during year", greatest_growth, "qtr", greatest_growth_qtr) 
+paste("The greatest rate of growth happened during year", greatest_growth_year, "qtr", greatest_growth_qtr) 
 
 dis_plus |> 
   gt() |>
