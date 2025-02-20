@@ -523,22 +523,28 @@ paste("The greatest movement of market cap happened in Decemeber of 2020, specif
 
 ```{r c2a}
 
-dis_shares <- 1 / (dis_stock %>% 
-  filter(date == as.Date("2021-01-02")) %>% 
-  pull(close))
+dis_stock_dup <- dis_stock %>%
+  filter(date >= as.Date("2021-01-02")) 
 
-spx_shares <- 1 / (dis_stock %>%
-  filter(date == as.Date("2021-01-02")) %>%
-  pull(spx))
+init_dis_price <- dis_stock_dup %>%
+  first(dis_stock_dup) %>%
+  pull(close)
+
+init_spx_price <- dis_stock_dup %>%
+  first(dis_stock_dup) %>%
+  pull(spx)
+
+dis_shares <- 1 / init_dis_price
+
+spx_shares <- 1 / init_spx_price
 
 stock <- dis_stock %>%
   filter(date >= as.Date("2021-01-02") & date <= as.Date("2024-12-31")) %>%
   mutate(
     dis_growth = dis_shares * close,
-    spx_growth = spx_shares * spx_shares
+    spx_growth = spx_shares * spx,
   ) %>%
   select(date, dis_growth, spx_growth)
-
 
 
 plot <- stock %>%
@@ -546,7 +552,7 @@ plot <- stock %>%
   geom_line(aes(y = dis_growth, color = "DIS"), linewidth = 1) +
   geom_line(aes(y = spx_growth, color = "S&P 500"), linewidth = 1) +
   scale_color_manual(values = c("DIS" = "blue", "S&P 500" = "red")) +
-  scale_x_date(date_breaks = "3 months", date_labels = "%Y-%m") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%Y-%m") +
   scale_y_continuous(breaks = seq(0, 2, by = 0.1)) +
   labs(
     title = "Growth of $1 Investment (1/2/2021-12/31/2024)",
