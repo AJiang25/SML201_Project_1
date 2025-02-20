@@ -385,12 +385,15 @@ hchart(
     list(opposite = TRUE, title = list(text = 'Netflix Subscribers (in Millions)', style = list(color = "red")))
   ) |>
   hc_title(text = "Subscriber Counts for Disney+ and Netflix", align = "center") |>
-  # hc_xAxis(title = list(text = "Year and Quarter")) 
   hc_xAxis(
     title = list(text = "Year and Quarter"),
     categories = unique(dis_plus$year_qtr),
     tickInterval = 1
-  )
+  ) |>
+  hc_legend(
+    align = "right",
+    verticalAlign = "middle"
+  ) 
 
 ```
 
@@ -508,8 +511,12 @@ paste("The greatest movement of market cap happened in Decemeber of 2020, specif
 stock <- dis_stock %>%
   filter(date >= as.Date("2021-01-02") & date <= as.Date("2024-12-31")) %>%
   mutate(
-    dis_growth = close / last(close),
-    spx_growth = spx / last(spx)
+    # dis_growth = close / last(close),
+    # spx_growth = spx / last(spx)
+    shares = 1 / last(close),
+    dis_growth = shares * close,
+    spx_shares = 1 / last(spx),
+    spx_growth = spx_shares * spx
   ) %>%
   select(date, dis_growth, spx_growth)
 
@@ -571,7 +578,13 @@ dis_stock1 %>%
       color = 'purple'
     ) %>%
   hc_xAxis(title = list(text = '2024 Trading Day')) %>%
-  hc_yAxis(title = list(text = 'Share Price'))
+  hc_yAxis(title = list(text = 'Share Price')) %>%
+  hc_title(text = "Disney Intra-Day Stock Price") %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "middle",
+    layout = "vertical"
+  )
 
 ```
 
