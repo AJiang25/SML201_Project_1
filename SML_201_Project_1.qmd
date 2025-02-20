@@ -315,7 +315,6 @@ dis_plus |>
     -   range of quarterly subscribers
 
 ```{r b1b}
-# range is not referring to the interval here right?? it's referring to the difference right??
 
 annualized_sum <- dis_plus |>
   group_by(year) |>
@@ -353,7 +352,6 @@ annualized_sum |>
 dis_plus <- dis_plus |> 
   mutate(year_qtr = paste0("", year, "-Q", qtr)) 
 
-# lmk if this needs to be styled more bc idk 
 hchart(
   object = dis_plus,
   mapping = hcaes(x = year_qtr, y = dis_subs),
@@ -381,7 +379,7 @@ hchart(
 
 Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
 
-> Summary
+> We observed that the overall trend for Netflix subscribers over the years 2020 to 2024
 
 ------------------------------------------------------------------------
 
@@ -455,15 +453,27 @@ $$
 
 ```{r c1b}
 
-peak_market_cap_date = dis_stock |>
-  mutate(market_cap = close * shrsout) |>
+dis_stock_with_market_cap <-  dis_stock |>
+  mutate(market_cap = close * shrsout,
+         month_movement = abs(market_cap - lag(market_cap))) 
+
+dis_stock_with_market_cap <- dis_stock_with_market_cap |>
+  mutate(month_movement = ifelse(is.na(month_movement), 0, month_movement))
+
+peak_market_cap_date = dis_stock_with_market_cap |>
   filter(market_cap == max(market_cap)) |>
   pull(date)
 
+# the market capitalization of DIS was at its peak on 2021-03-08
 paste("The market capitalization of DIS was at its peak on", peak_market_cap_date)
 
-# need to finish the second part
+greatest_monthly_movement <- dis_stock_with_market_cap |> 
+  filter(month_movement == max(month_movement)) |>
+  pull(date)
 
+# the greatest movement of market cap was happened in Decemeber of 2020, specifically on 2020-12-10
+paste("The greatest movement of market cap was happened in Decemeber of 2020, specifically on", greatest_monthly_movement)
+  
 
 ```
 
