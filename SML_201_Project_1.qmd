@@ -243,8 +243,6 @@ paste("We chose 2019 to 2023 because we wanted to see what
   impact Covid had on international Revenue of Disney Movies")
 ```
 
-
-
 #### A3. Summary \[*3 pts*\]
 
 Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
@@ -400,7 +398,7 @@ hchart(
 
 Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
 
-> We observed that the overall trend for Netflix subscribers over the years 2020 to 2024
+> We observe that Disney+ has a high growth rate over 20% in the beginning from 2020 quarter 1 to 2021 quarter 1, but gradually has steady single digit percent of growth from 2021 quarter 2 to 2022 quarter 4. From 2023 quarter 1 to 2024 quarter 4, the growth rate of Disney+ subscribers is generally minimal or decreasing. Meanwhile, Netflix, the king of Video On Demand service, is consistently having positive growth rate other than 2022 quarter 2. Annually, lowest bound of quarterly Disney+ subscribers is increasing, and range of quarterly subscribers is decreasing, but quarterly highest Disney+ subscribers peaked in 2022, then it decreased. We also see that in 2020 quarter 1 Netflix has more subscribers than Disney+, but in 2021 quarter 3 and 2021 quarter 4, and from 2022 Quarter 3 to 2023 Quarter 2, Disney+ surpassed Netflix in quarterly subscribers, and throughout 2020 Quarter 1 to 2023 Quarter 2, the quarterly subscribers is similar between Netflix and Disney+, but starting from 2023 Quarter 3, the amount of quarterly Disney+ subscribers plateaus, while Netflix's quarterly subscribers is still growing.
 
 ------------------------------------------------------------------------
 
