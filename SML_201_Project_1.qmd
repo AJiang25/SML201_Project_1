@@ -88,6 +88,9 @@ All box office figures are unadjusted for inflation.
 dis_25 <- dis_movies %>%
     mutate(
         total_worldwide = box_dom + box_int,
+        box_dom =round(box_dom / 1e6, digits = 2),
+        box_int = round(box_int / 1e6, digits = 2),
+        total_worldwide = round(total_worldwide / 1e6, digits = 2)
     ) %>%
     slice_max(n = 25, total_worldwide) %>%
     gt() %>% 
@@ -97,9 +100,9 @@ dis_25 <- dis_movies %>%
     cols_label(
         yor = html("Year of Release"),
         movie = html("Movie Name"),
-        box_dom = html("Domestic Revenue"),
-        box_int = html("International Revenue"),
-        total_worldwide = html("Worldwide Revenue")
+        box_dom = html("Domestic Revenue (Million USD)"),
+        box_int = html("International Revenue (Million USD)"),
+        total_worldwide = html("Worldwide Revenue (Million USD)")
     ) %>%
     opt_stylize(style = 6, color = "cyan")
 
@@ -115,7 +118,8 @@ dis_25
 dis_100 <- dis_movies %>%
     mutate(
         total_worldwide = box_dom + box_int,
-        percentage = box_int / total_worldwide * 100
+        percentage = box_int / total_worldwide * 100,
+        
     ) %>%
   arrange(desc(percentage)) %>%
   filter(row_number() <= 100)
@@ -192,20 +196,19 @@ min_box = min(two_thousands_movies$box_dom_adj)
 max_box = max(two_thousands_movies$box_dom_adj)
 
 two_thousands_movies |> 
-  ggplot(aes(x = yor, y = box_dom_adj)) +
+  ggplot(aes(x = yor, y = box_dom_adj, color = box_dom_adj)) +
   geom_point() +
   labs(title = "Inflation-Adjusted Domestic Revenue of Movies Released in 2000-2009",
        x = 'Year of Release', 
        y = 'Domestic Box Office (Adjusted)') + 
   lims(y = c(min_box, max_box)) + 
   scale_x_continuous(breaks = seq(2000, 2009, 1)) +
+  scale_color_gradient(low = 'lightblue', high = 'blue') +
   theme(
     plot.title = element_text(color = 'purple'),
     axis.title.x = element_text(color = 'purple'),
     axis.title.y = element_text(color = 'purple'),
   )
-
-
 ```
 
 ##### A2b. Five-Year Trend \[*8 pts*\]
@@ -222,14 +225,25 @@ box_int_by_year <- filtered_movies_2 |>
   summarise(year_box_int = sum(box_int))
 
 box_int_by_year |> 
-  hchart(hcaes(x = yor, y = year_box_int), type = "column") |>
+  hchart(
+    hcaes(
+      x = yor, 
+      y = year_box_int
+    ), 
+    type = "column", 
+    name = "Box Office Revenue of Disney Movies"
+  ) |>
   hc_title(text = "Trends in International Revenue of Disney Movies from 2019-2023") |>
   hc_xAxis(title = list(text = "Year Of Release")) |>
-  hc_yAxis(title = list(text = "International Revenue")) 
-  
+  hc_yAxis(title = list(text = "International Revenue (Billions)")) 
 
-
+# We chose 2019 to 2023 because we wanted to see what impact Covid 
+# had on international Revenue of Disney Movies
+paste("We chose 2019 to 2023 because we wanted to see what 
+  impact Covid had on international Revenue of Disney Movies")
 ```
+
+
 
 #### A3. Summary \[*3 pts*\]
 
@@ -268,7 +282,7 @@ Data Dictionary
 -   Express the growth rates as decimals rounded to 3 dp.
 -   In a comment, state which quarter & year experienced the greatest rate of growth.
 
-```{r bia}
+```{r b1a}
 
 dis_plus <- dis_plus |>
   mutate(qtr_over_qtr_growth = round((dis_subs - lag(dis_subs)) / dis_subs * 100, 3)) |>
@@ -350,28 +364,35 @@ annualized_sum |>
 ```{r b2a}
 
 dis_plus <- dis_plus |> 
-  mutate(year_qtr = paste0("", year, "-Q", qtr)) 
+  mutate(year_qtr = paste0("Q", qtr, "-", year)) 
 
 hchart(
   object = dis_plus,
   mapping = hcaes(x = year_qtr, y = dis_subs),
   type = 'line',
   color = 'orange',
-  yAxis = 0
+  yAxis = 0,
+  name = "Disney+ Subscribers (Millions)"
 ) |> 
   hc_add_series( 
     data = dis_plus,
     mapping = hcaes(x = year_qtr, y = nflx_subs),
     type = 'line',
     color = 'red',
-    yAxis = 1
+    yAxis = 1,
+    name = "Subscriber Counts for Disney+ and Netflix"
   ) |> 
   hc_yAxis_multiples(
     list(title = list(text = 'Disney+ Subscribers (in Millions)', style = list(color = "orange"))),
     list(opposite = TRUE, title = list(text = 'Netflix Subscribers (in Millions)', style = list(color = "red")))
   ) |>
   hc_title(text = "Subscriber Counts for Disney+ and Netflix", align = "center") |>
-  hc_xAxis(title = list(text = "Year and Quarter")) 
+  # hc_xAxis(title = list(text = "Year and Quarter")) 
+  hc_xAxis(
+    title = list(text = "Year and Quarter"),
+    categories = unique(dis_plus$year_qtr),
+    tickInterval = 1
+  )
 
 ```
 
