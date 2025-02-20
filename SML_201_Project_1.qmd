@@ -179,8 +179,6 @@ dis_movies %>%
 
 #### A2. Charts \[*16 pts total*\]
 
-test pushing
-
 ##### A2a. Box Office Distribution \[*8 pts*\]
 
 -   Generate a scatterplot (in `ggplot2`) of the inflation-adjusted domestic box office revenue of all movies released in the 2000s (2000-2009).
@@ -239,8 +237,7 @@ box_int_by_year |>
 
 # We chose 2019 to 2023 because we wanted to see what impact Covid 
 # had on international Revenue of Disney Movies
-paste("We chose 2019 to 2023 because we wanted to see what 
-  impact Covid had on international Revenue of Disney Movies")
+paste("We chose 2019 to 2023 because we wanted to see what impact Covid had on international Revenue of Disney Movies.")
 ```
 
 #### A3. Summary \[*3 pts*\]
@@ -560,7 +557,7 @@ plot <- stock %>%
     y = "Value of Investment ($)",
     color = "Investment"
   ) +
-  theme_classic()
+  theme(plot.title = element_text(hjust = 0.5))
 
 plot
 ```
