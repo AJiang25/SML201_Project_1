@@ -579,7 +579,7 @@ dis_stock1 %>%
 
 Write a concluding paragraph on your observations during the completion of this section. Contain all your words within the blockquote below by replacing the word 'Summary' with your text.
 
-> Summary
+> We observe that there are only 11 days from 2500 trading days that there was at least 5% of gain or loss, and the highest one day change is -10.428170%, and 4 out of 11 days that has 5% changes occurred in March of 2020, which means it is highly correlated with the beginning of COVID-19 pandemic, therefore we notice that that DIS is a stable stock that rarely have single day stock price changes. And the market capitalization peaked in 2021-03-08, and the greatest movement of market cap happened in Decemeber of 2020, which means it is really possible that in December of 2020, market cap hugely increased for it to peak in 2021-02-08. From \$1 investment chart, we can see that S&P 500 has a better general return rate than DIS. We also can notice that the graph between open, high, low and close are all really similar, meaning there is really small margin of single day changes for DIS stocks for each trading days in 2024.
 
 ------------------------------------------------------------------------
 
