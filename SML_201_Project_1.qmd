@@ -452,7 +452,7 @@ filtered_dis_stocks |>
       volume = html("Volume"),
       spx = html("SPX"),
       shrsout = html("Outstanding Shares"),
-      percentage = html("Per Change")
+      percentage = html("Chang Over 5%")
   ) |> 
   opt_stylize(style = 6, color = "pink")
 
@@ -474,10 +474,10 @@ $$
 
 dis_stock_with_market_cap <-  dis_stock |>
   mutate(market_cap = close * shrsout,
-         month_movement = abs(market_cap - lag(market_cap))) 
+         date_movement = abs(market_cap - lag(market_cap))) 
 
 dis_stock_with_market_cap <- dis_stock_with_market_cap |>
-  mutate(month_movement = ifelse(is.na(month_movement), 0, month_movement))
+  mutate(date_movement = ifelse(is.na(date_movement), 0, date_movement))
 
 peak_market_cap_date = dis_stock_with_market_cap |>
   filter(market_cap == max(market_cap)) |>
@@ -487,12 +487,11 @@ peak_market_cap_date = dis_stock_with_market_cap |>
 paste("The market capitalization of DIS was at its peak on", peak_market_cap_date)
 
 greatest_monthly_movement <- dis_stock_with_market_cap |> 
-  filter(month_movement == max(month_movement)) |>
+  filter(date_movement == max(date_movement)) |>
   pull(date)
 
-# the greatest movement of market cap was happened in Decemeber of 2020, specifically on 2020-12-10
-paste("The greatest movement of market cap was happened in Decemeber of 2020, specifically on", greatest_monthly_movement)
-  
+# the greatest movement of market cap happened in Decemeber of 2020, specifically on 2020-12-10
+paste("The greatest movement of market cap happened in Decemeber of 2020, specifically on", greatest_monthly_movement)
 
 ```
 
@@ -506,8 +505,30 @@ paste("The greatest movement of market cap was happened in Decemeber of 2020, sp
 
 ```{r c2a}
 
+stock <- dis_stock %>%
+  filter(date >= as.Date("2021-01-02") & date <= as.Date("2024-12-31")) %>%
+  mutate(
+    dis_growth = close / first(close),
+    spx_growth = spx / first(spx)
+  ) %>%
+  select(date, dis_growth, spx_growth)
 
+plot <- stock %>%
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = dis_growth, color = "DIS"), linewidth = 1) +
+  geom_line(aes(y = spx_growth, color = "S&P 500"), linewidth = 1) +
+  scale_color_manual(values = c("DIS" = "blue", "S&P 500" = "red")) +
+  scale_x_date(date_breaks = "3 months", date_labels = "%Y-%m") +
+  scale_y_continuous(breaks = seq(0, 2, by = 0.1)) +
+  labs(
+    title = "Growth of $1 Investment (2021-2024)",
+    x = "Date",
+    y = "Value of Investment ($)",
+    color = "Investment"
+  ) +
+  theme_classic()
 
+plot
 ```
 
 ##### C2b. OHLC \[*7 pts*\]
