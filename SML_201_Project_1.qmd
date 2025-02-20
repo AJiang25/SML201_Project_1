@@ -508,10 +508,12 @@ paste("The greatest movement of market cap happened in Decemeber of 2020, specif
 stock <- dis_stock %>%
   filter(date >= as.Date("2021-01-02") & date <= as.Date("2024-12-31")) %>%
   mutate(
-    dis_growth = close / first(close),
-    spx_growth = spx / first(spx)
+    dis_growth = close / last(close),
+    spx_growth = spx / last(spx)
   ) %>%
   select(date, dis_growth, spx_growth)
+
+print(stock, n = 1005)
 
 plot <- stock %>%
   ggplot(aes(x = date)) +
@@ -521,7 +523,7 @@ plot <- stock %>%
   scale_x_date(date_breaks = "3 months", date_labels = "%Y-%m") +
   scale_y_continuous(breaks = seq(0, 2, by = 0.1)) +
   labs(
-    title = "Growth of $1 Investment (2021-2024)",
+    title = "Growth of $1 Investment (1/2/2021-12/31/2024)",
     x = "Date",
     y = "Value of Investment ($)",
     color = "Investment"
@@ -536,8 +538,40 @@ plot
 -   Using `highcharter`, generate a chart showing the intra-day prices (open, high, low, close) for each trading day in 2024.
 
 ```{r c2b}
+dis_stock1 = dis_stock %>%
+  filter(year(date) == 2024)
 
-
+dis_stock1 %>%
+  hchart(
+    object = dis_stock1,
+    mapping = hcaes(x = date, y = open),
+    type = 'line',
+    name = 'Open',
+    color = 'red'
+  ) %>%
+    hc_add_series(
+      data = dis_stock1,
+      mapping = hcaes(x = date, y = high),
+      type = 'line',
+      name = 'High',
+      color = 'blue'
+    ) %>%
+    hc_add_series(
+      data = dis_stock1,
+      mapping = hcaes(x = date, y = low),
+      type = 'line',
+      name = 'Low',
+      color = 'green'
+    ) %>%
+    hc_add_series(
+      data = dis_stock1,
+      mapping = hcaes(x = date, y = close),
+      type = 'line',
+      name = 'Close',
+      color = 'purple'
+    ) %>%
+  hc_xAxis(title = list(text = '2024 Trading Day')) %>%
+  hc_yAxis(title = list(text = 'Share Price'))
 
 ```
 
