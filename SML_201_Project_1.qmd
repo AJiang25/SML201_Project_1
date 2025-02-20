@@ -364,15 +364,16 @@ annualized_sum |>
 dis_plus <- dis_plus |> 
   mutate(year_qtr = paste0("Q", qtr, "-", year)) 
 
-hchart(
-  object = dis_plus,
-  mapping = hcaes(x = year_qtr, y = dis_subs),
-  type = 'line',
-  color = 'orange',
-  yAxis = 0,
-  name = "Disney+ Subscribers (Millions)"
+highchart() |>
+  hc_add_series(
+    data = dis_plus,
+    mapping = hcaes(x = year_qtr, y = dis_subs),
+    type = 'line',
+    color = 'orange',
+    yAxis = 0,
+    name = "Disney+ Subscribers (Millions)"
 ) |> 
-  hc_add_series( 
+  hc_add_series(
     data = dis_plus,
     mapping = hcaes(x = year_qtr, y = nflx_subs),
     type = 'line',
@@ -381,18 +382,32 @@ hchart(
     name = "Subscriber Counts for Disney+ and Netflix"
   ) |> 
   hc_yAxis_multiples(
-    list(title = list(text = 'Disney+ Subscribers (in Millions)', style = list(color = "orange"))),
-    list(opposite = TRUE, title = list(text = 'Netflix Subscribers (in Millions)', style = list(color = "red")))
+    list(
+      title = list(
+        text = 'Disney+ Subscribers (in Millions)', 
+        style = list(color = "orange")
+        )
+      ),
+    list(
+      opposite = TRUE, 
+      title = list(
+        text = 'Netflix Subscribers (in Millions)', 
+        style = list(color = "red")
+        )
+      )
   ) |>
-  hc_title(text = "Subscriber Counts for Disney+ and Netflix", align = "center") |>
+  hc_title(
+    text = "Subscriber Counts for Disney+ and Netflix", 
+    align = "center"
+    ) |>
   hc_xAxis(
     title = list(text = "Year and Quarter"),
     categories = unique(dis_plus$year_qtr),
     tickInterval = 1
   ) |>
   hc_legend(
-    align = "right",
-    verticalAlign = "middle"
+    align = "left",
+    verticalAlign = "bottom"
   ) 
 
 ```
@@ -508,19 +523,23 @@ paste("The greatest movement of market cap happened in Decemeber of 2020, specif
 
 ```{r c2a}
 
+dis_shares <- 1 / (dis_stock %>% 
+  filter(date == as.Date("2021-01-02")) %>% 
+  pull(close))
+
+spx_shares <- 1 / (dis_stock %>%
+  filter(date == as.Date("2021-01-02")) %>%
+  pull(spx))
+
 stock <- dis_stock %>%
   filter(date >= as.Date("2021-01-02") & date <= as.Date("2024-12-31")) %>%
   mutate(
-    # dis_growth = close / last(close),
-    # spx_growth = spx / last(spx)
-    shares = 1 / last(close),
-    dis_growth = shares * close,
-    spx_shares = 1 / last(spx),
-    spx_growth = spx_shares * spx
+    dis_growth = dis_shares * close,
+    spx_growth = spx_shares * spx_shares
   ) %>%
   select(date, dis_growth, spx_growth)
 
-print(stock, n = 1005)
+
 
 plot <- stock %>%
   ggplot(aes(x = date)) +
@@ -548,14 +567,14 @@ plot
 dis_stock1 = dis_stock %>%
   filter(year(date) == 2024)
 
-dis_stock1 %>%
-  hchart(
-    object = dis_stock1,
-    mapping = hcaes(x = date, y = open),
-    type = 'line',
-    name = 'Open',
-    color = 'red'
-  ) %>%
+  highchart() %>%
+    hc_add_series(
+      data = dis_stock1,
+      mapping = hcaes(x = date, y = open),
+      type = 'line',
+      name = 'Open',
+      color = 'red'
+    ) %>%
     hc_add_series(
       data = dis_stock1,
       mapping = hcaes(x = date, y = high),
