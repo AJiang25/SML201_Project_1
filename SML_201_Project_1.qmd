@@ -570,6 +570,7 @@ plot
 dis_stock1 = dis_stock %>%
   filter(year(date) == 2024)
 
+
   highchart() %>%
     hc_add_series(
       data = dis_stock1,
@@ -599,7 +600,7 @@ dis_stock1 = dis_stock %>%
       name = 'Close',
       color = 'purple'
     ) %>%
-  hc_xAxis(title = list(text = '2024 Trading Day')) %>%
+  hc_xAxis(type = 'datetime', title = list(text = '2024 Trading Day')) %>%
   hc_yAxis(title = list(text = 'Share Price')) %>%
   hc_title(text = "Disney Intra-Day Stock Price") %>%
   hc_legend(
